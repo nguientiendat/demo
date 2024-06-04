@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .option {
+            margin-top: 50px;
+        }
+        .img-size {
+            height: 20px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+   <div class="option"> 
+        <select id="imageSelect">
+            <option value="" disabled selected hidden>Chọn độ phân giải</option>
+            <option value="image/@@.png" class="img-size">144p</option>
+            <option value="image/7e83b07241dd2d2c06f41059e39c1506.jpg" class="img-size">240p</option>
+            <option value="image/pixel-earth-design-martin-capek.jpg" class="img-size">480p</option>
+            <option value="image/pixel-3-xl-earth-from-space-i9fyeo4caxr9k2qp.jpg" class="img-size">720p</option>
+            <option value="video/Snapinsta.app_video_318877458_970681184682782_1920852394925015101_n.mp4">1080p</option>
+        </select>
+        <img id="imageDisplay" src="" alt="Selected Image" style="display: none;">
+        <video id="videoDisplay" width="640" height="360"  autoplay  style="display: none;" >
+            <source id="videoSource" src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        document.getElementById('imageSelect').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var imageDisplay = document.getElementById('imageDisplay');
+            var videoDisplay = document.getElementById('videoDisplay');
+            var videoSource = document.getElementById('videoSource');
+
+            if (selectedOption.disabled) {
+                return; // Nếu người dùng chọn tùy chọn mặc định, không làm gì cả
+            }
+
+            // Kích hoạt tất cả các tùy chọn bên dưới tùy chọn đã chọn
+            var options = this.options;
+            var selectedIndex = this.selectedIndex;
+            for (var i = selectedIndex + 1; i < options.length; i++) {
+                options[i].disabled = false;
+            }
+
+            if (selectedOption.value.endsWith('.mp4')) {
+                imageDisplay.style.display = 'none';
+                videoDisplay.style.display = 'block';
+                videoSource.src = selectedOption.value;
+                videoDisplay.load();
+                // Kích hoạt chế độ toàn màn hình khi video bắt đầu phát
+                videoDisplay.addEventListener('play', function() {
+                    if (videoDisplay.requestFullscreen) {
+                        videoDisplay.requestFullscreen();
+                    } else if (videoDisplay.mozRequestFullScreen) { /* Firefox */
+                        videoDisplay.mozRequestFullScreen();
+                    } else if (videoDisplay.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                        videoDisplay.webkitRequestFullscreen();
+                    } else if (videoDisplay.msRequestFullscreen) { /* IE/Edge */
+                        videoDisplay.msRequestFullscreen();
+                    }
+                });
+            } else {
+                videoDisplay.style.display = 'none';
+                imageDisplay.src = selectedOption.value;
+                imageDisplay.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
